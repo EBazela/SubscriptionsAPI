@@ -14,7 +14,8 @@
 	<name>subscriptionsAPI</name>
 	<description>A coding challenge for Nuuday - Eryk Bazela</description>
 	<properties>
-		<java.version>16</java.version>
+		<maven.compiler.source>15</maven.compiler.source>
+		<maven.compiler.target>15</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -27,15 +28,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+			<scope>provided</scope>
+		</dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	</dependencies>
 
 </project>
