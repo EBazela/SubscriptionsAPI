@@ -35,13 +35,13 @@ public class CustomerRepository {
         this.customers.add(new Customer(101L, "elonmusk@mars.com","Elon", "Musk", mockedSubscriptions));
     }
 
-    public RegistrationResult addSubscription(Long customerID, Subscription subscription) {
+    public Long addSubscription(Long customerID, Subscription subscription) {
         try {
             var customer = findCustomerByID(customerID);
             customer.getSubscriptions().put(++subscriptionID, subscription);
-            return new RegistrationResult(subscriptionID ,"New subscription added successfully");
+            return subscriptionID;
         } catch (Exception e) {
-            throw new NotFoundException("Adding subscription failed" + e.getCause());
+            throw new NotFoundException("Adding subscription failed " + e.getMessage());
         }
     }
 
@@ -50,23 +50,37 @@ public class CustomerRepository {
             var customer = findCustomerByID(customerID);
             return customer.getSubscriptions();
         } catch (Exception e) {
-            throw new NotFoundException("Selected customer has no subscriptions assigned");
+            throw new NotFoundException("Selected customer has no subscriptions assigned.");
         }
     }
 
     public Subscription getSingleSubscription(Long customerID ,Long subscriptionID) {
-        try {
             var customer = findCustomerByID(customerID);
-            return customer.getSubscriptions().get(subscriptionID);
-        } catch (Exception e) {
-            throw new NotFoundException("There is no such subscription assigned to the customer");
+            if (customer.getSubscriptions().containsKey(subscriptionID)) {
+                return customer.getSubscriptions().get(subscriptionID);
+            } else {
+                throw new NotFoundException("There is no such subscription assigned to the customer.");
+            }
+    }
+
+    public void deleteSubscription(Long customerID, Long subscriptionID) {
+        var customer = findCustomerByID(customerID);
+        var removedSubscriptionValue = customer.getSubscriptions().remove(subscriptionID);
+        if (removedSubscriptionValue == null) {
+            throw new NotFoundException("Deletion failed. Subscription not found.");
         }
+    }
+
+    public void changeSubscriptionState(Long customerID, Long subscriptionID, String newState) {
+        var customer = findCustomerByID(customerID);
+        var subscription = customer.getSubscriptions().get(subscriptionID);
+        subscription.setSubscriptionState(newState);
     }
 
     private Customer findCustomerByID(Long customerID) {
         return customers.stream()
                 .filter(customer -> customerID.equals(customer.getCustomerID()))
                 .findAny()
-                .orElseThrow(()-> new NotFoundException("Customer not found in the database"));
+                .orElseThrow(()-> new NotFoundException("Customer not found in the database."));
     }
 }

@@ -1,5 +1,7 @@
 package com.example.subscriptionsAPI.service;
 
+import com.example.subscriptionsAPI.model.contract.ChangeSubscriptionStateResult;
+import com.example.subscriptionsAPI.model.contract.DeletionResult;
 import com.example.subscriptionsAPI.model.contract.RegistrationEntity;
 import com.example.subscriptionsAPI.model.contract.RegistrationResult;
 import com.example.subscriptionsAPI.model.entity.Subscription;
@@ -23,15 +25,25 @@ public class CustomerService {
                 registrationEntity.getNotificationDate(),
                 registrationEntity.getSubscriptionState()
         );
-        var registrationResponse = customerRepository.addSubscription(registrationEntity.getCustomerID(),subscription);
-        return new RegistrationResult(registrationResponse.productID(),"Success");
+        var registeredEntityID = customerRepository.addSubscription(registrationEntity.getCustomerID(),subscription);
+        return new RegistrationResult(registeredEntityID,"Success");
     }
 
     public Map<Long, Subscription> getSubscriptions(Long customerID) {
         return customerRepository.getCustomersSubscriptions(customerID);
     }
 
-    public Subscription getSubscription(Long customerID, Long subscriptonID) {
-        return customerRepository.getSingleSubscription(customerID, subscriptonID);
+    public Subscription getSubscription(Long customerID, Long subscriptionID) {
+        return customerRepository.getSingleSubscription(customerID, subscriptionID);
+    }
+
+    public DeletionResult deleteSubscription(Long customerID, Long subscriptionID) {
+        customerRepository.deleteSubscription(customerID, subscriptionID);
+        return new DeletionResult("Record deleted successfully");
+    }
+
+    public ChangeSubscriptionStateResult updateSubscriptionState(Long customerID, Long subscriptionID, String newState) {
+        customerRepository.changeSubscriptionState(customerID, subscriptionID, newState);
+        return new ChangeSubscriptionStateResult("Subscription state updated successfully");
     }
 }
