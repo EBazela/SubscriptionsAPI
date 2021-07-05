@@ -23,11 +23,15 @@ public class CustomerService {
                 registrationEntity.getNotificationDate(),
                 registrationEntity.getSubscriptionState()
         );
-        customerRepository.addSubscription(registrationEntity.getCustomerID(),subscription);
-        return new RegistrationResult("Success");
+        var registrationResponse = customerRepository.addSubscription(registrationEntity.getCustomerID(),subscription);
+        return new RegistrationResult(registrationResponse.productID(),"Success");
     }
 
-//    public Map<Long, Subscription> getSubscriptions(Long customerID) {
-//        customerRepository.
-//    }
+    public Map<Long, Subscription> getSubscriptions(Long customerID) {
+        return customerRepository.getCustomersSubscriptions(customerID);
+    }
+
+    public Subscription getSubscription(Long customerID, Long subscriptonID) {
+        return customerRepository.getSingleSubscription(customerID, subscriptonID);
+    }
 }

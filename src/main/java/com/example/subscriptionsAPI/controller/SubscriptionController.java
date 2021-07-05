@@ -6,15 +6,12 @@ import com.example.subscriptionsAPI.model.entity.Subscription;
 import com.example.subscriptionsAPI.service.CustomerService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "subscription")
+@RequestMapping(value = "subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
@@ -25,10 +22,15 @@ public class SubscriptionController {
         return customerService.registerSubscription(registrationEntity);
     }
 
+    @RequestMapping(value = "subscriptions", method = RequestMethod.GET)
+    public Map<Long, Subscription> getSubscriptions(@ApiParam(value = "The ID of the customer whose subscriptions should be retrieved") Long customerID) {
+        return customerService.getSubscriptions(customerID);
+    }
 
-//    @RequestMapping(value = "subscriptions", method = RequestMethod.GET)
-//    public Map<Long, Subscription> getSubscriptions(@ApiParam(value = "The ID of the customer whose subscriptions should be retrieved") Long customerID) {
-//        return customerService.getSubscriptions(customerID);
-//    }
+    @RequestMapping(value = "subscriptions/{id}", method = RequestMethod.GET)
+    public Subscription getSubscription(@ApiParam(value = "The ID of the customer who owes the subscription")Long customerID,
+                                       @PathVariable() Long id) {
+        return customerService.getSubscription(customerID, id);
+    }
 
 }

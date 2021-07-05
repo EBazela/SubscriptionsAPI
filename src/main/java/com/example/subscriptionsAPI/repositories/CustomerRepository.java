@@ -12,6 +12,7 @@ import java.util.*;
 @Repository
 public class CustomerRepository {
     private final List<Customer> customers = new ArrayList<>();
+    Long subscriptionID = 2001L;
     private HashMap<Long, Subscription> mockedSubscriptions = new HashMap<>()
     {{
         put(subscriptionID ,new Subscription(
@@ -21,7 +22,7 @@ public class CustomerRepository {
                 LocalDate.of(2021, 7,7),
                 "active"
         ));
-        put(subscriptionID ,new Subscription(
+        put(++subscriptionID ,new Subscription(
                 "YouSee service",
                 LocalDate.of(2021, 5, 8),
                 LocalDate.of(2021, 6,8),
@@ -29,7 +30,6 @@ public class CustomerRepository {
                 "inactive"
         ));
     }};
-    Long subscriptionID = 2001L;
 
     public CustomerRepository() {
         this.customers.add(new Customer(101L, "elonmusk@mars.com","Elon", "Musk", mockedSubscriptions));
@@ -38,21 +38,30 @@ public class CustomerRepository {
     public RegistrationResult addSubscription(Long customerID, Subscription subscription) {
         try {
             var customer = findCustomerByID(customerID);
-            customer.getSubscriptions().put(subscriptionID++, subscription);
-            return new RegistrationResult("New subscription added successfully");
+            customer.getSubscriptions().put(++subscriptionID, subscription);
+            return new RegistrationResult(subscriptionID ,"New subscription added successfully");
         } catch (Exception e) {
             throw new NotFoundException("Adding subscription failed" + e.getCause());
         }
     }
 
-//    public Map<Long, Subscription> getCustomersSubscriptions (Long customerID) {
-//        try {
-//            var customer = findCustomerByID(customerID);
-//            return customer.getSubscriptions();
-//        } catch (Exception e) {
-//            throw new
-//        }
-//    }
+    public Map<Long, Subscription> getCustomersSubscriptions (Long customerID) {
+        try {
+            var customer = findCustomerByID(customerID);
+            return customer.getSubscriptions();
+        } catch (Exception e) {
+            throw new NotFoundException("Selected customer has no subscriptions assigned");
+        }
+    }
+
+    public Subscription getSingleSubscription(Long customerID ,Long subscriptionID) {
+        try {
+            var customer = findCustomerByID(customerID);
+            return customer.getSubscriptions().get(subscriptionID);
+        } catch (Exception e) {
+            throw new NotFoundException("There is no such subscription assigned to the customer");
+        }
+    }
 
     private Customer findCustomerByID(Long customerID) {
         return customers.stream()
