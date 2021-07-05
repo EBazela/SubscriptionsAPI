@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "subscriptions")
+@RequestMapping(value = "api")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
