@@ -1,9 +1,9 @@
-package model.entity;
+package com.example.subscriptionsAPI.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -13,5 +13,5 @@ public class Customer {
     private String email;
     private String name;
     private String lastName;
-    private Set<Subscription> subscriptions;
+    private Map<Long, Subscription> subscriptions;
 }
