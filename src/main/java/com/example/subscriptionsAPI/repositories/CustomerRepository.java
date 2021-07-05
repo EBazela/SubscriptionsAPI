@@ -40,18 +40,18 @@ public class CustomerRepository {
             var customer = findCustomerByID(customerID);
             customer.getSubscriptions().put(++subscriptionID, subscription);
             return subscriptionID;
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             throw new NotFoundException("Adding subscription failed " + e.getMessage());
         }
     }
 
     public Map<Long, Subscription> getCustomersSubscriptions (Long customerID) {
-        try {
             var customer = findCustomerByID(customerID);
-            return customer.getSubscriptions();
-        } catch (Exception e) {
-            throw new NotFoundException("Selected customer has no subscriptions assigned.");
-        }
+            if (customer.getSubscriptions().isEmpty()) {
+                throw new NotFoundException("Selected customer has no subscriptions assigned.");
+            } else {
+                return customer.getSubscriptions();
+            }
     }
 
     public Subscription getSingleSubscription(Long customerID ,Long subscriptionID) {

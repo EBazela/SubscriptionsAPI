@@ -6,6 +6,8 @@ import com.example.subscriptionsAPI.model.contract.RegistrationEntity;
 import com.example.subscriptionsAPI.model.contract.RegistrationResult;
 import com.example.subscriptionsAPI.model.entity.Subscription;
 import com.example.subscriptionsAPI.repositories.CustomerRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,9 @@ public class CustomerService {
     }
 
     public ChangeSubscriptionStateResult updateSubscriptionState(Long customerID, Long subscriptionID, String newState) {
+        if (newState.isBlank()) {
+            throw new IllegalStateException("State parameter must not be null or blank");
+        }
         customerRepository.changeSubscriptionState(customerID, subscriptionID, newState);
         return new ChangeSubscriptionStateResult("Subscription state updated successfully");
     }
